@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.uwsoft.editor.renderer.SceneLoader;
-import com.uwsoft.editor.renderer.components.additional.ButtonComponent;
 import com.uwsoft.editor.renderer.utils.ItemWrapper;
 
 
@@ -28,7 +27,7 @@ public class SideScroller extends ApplicationAdapter {
 
 		ItemWrapper root = new ItemWrapper(sceneLoader.getRoot());
 
-		player = new Player();
+		player = new Player(sceneLoader.world);
 		root.getChild("player").addScript(player);
 
 		stage = new UIStage(sceneLoader.getRm());
@@ -53,6 +52,10 @@ public class SideScroller extends ApplicationAdapter {
 			}
 		});
 		*/
+
+		sceneLoader.addComponentsByTagName("plateform", PlatformComponent.class);
+
+		sceneLoader.getEngine().addSystem(new PlatformSystem());
 	}
 
 	@Override
@@ -65,7 +68,7 @@ public class SideScroller extends ApplicationAdapter {
 		stage.act();
 		stage.draw();
 
-		((OrthographicCamera)viewPort.getCamera()).position.set(player.getX(), player.getY(), 0);
+		((OrthographicCamera)viewPort.getCamera()).position.x = player.getX() + player.getWidth()/2;
 	}
 	
 	@Override
